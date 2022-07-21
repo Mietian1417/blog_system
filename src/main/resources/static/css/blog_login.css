@@ -1,0 +1,82 @@
+/* 这是博客登录的页面 */
+
+.login_container{
+    width: 100%;
+    height: calc(100% - 50px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login{
+    width: 500px;
+    height: 350px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+}
+
+.login .space{
+    height: 40px;
+    margin: 0 10px 0;
+}
+
+.login h3{
+    text-align: center;
+    font-size: 25px;
+}
+
+.login .row{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 10px 0 0;
+}
+
+.login span{
+    display: block;
+    width: 140px; 
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.login input{
+    height: 40px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+
+.login #submit{
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    font-size: 18px;
+    background-color: green;
+    color: rgb(243, 236, 236);
+    margin: 30px auto;
+}
+
+.login #button{
+    width: 100%;
+    height: 112px;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.login #submit:active{
+    color: red;
+    background-color: gray;
+}
+
+.login_container .login .register{
+    text-decoration: none;
+    color: gray;
+}

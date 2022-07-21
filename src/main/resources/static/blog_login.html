@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客系统登录</title>
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/blog_login.css">
+</head>
+<body>
+    <div class="nav">
+        <img src="image/logo.jpg" alt="这是博客系统的logo">
+        <span class="name">博客登录</span>
+        <span class="space"> </span>
+        <a href="blog_list.html">主页</a>
+        <a href="blog_write.html">写博客</a>
+        <a href="/blog/logout" style="display: none;">注销</a>
+    </div>
+
+    <div class="login_container">
+        <div class="login">
+            <div class="space"></div>
+            <h3>登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</h3>
+            <div class="row">
+                <span>用户名</span>
+                <input type="text" name="userName"  class="user_name">
+            </div>
+           <div class="row">
+                <span>密码</span>
+                <input type="password" name="password" class="password">
+           </div>
+           <div id="button">
+                <input onclick="login()" type="submit" id="submit" value="登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录">
+            </div>
+            <a href="blog_register.html" class="register">&nbsp;注册</a>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+        function login() {
+            let userName = $(".user_name").val();
+            let password = $(".password").val();
+            $.getJSON("/blog/login",
+                // 下面这个json格式传输到后端, 是查询字符串的格式获取
+                {
+                    "userName": userName,
+                    "password": password
+                },
+                function (result) {
+                    if (result.status !== 1) {
+                        alert(result.data)
+                    } else {
+                        location.assign("blog_list.html")
+                    }
+                }
+            )
+        }
+    </script>
+</body>
+</html>

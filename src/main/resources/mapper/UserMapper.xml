@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 里面是 mapper 接口的类名完整路径-->
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <resultMap id="BaseMap" type="com.example.demo.model.User">
+        <id column="user_id" property="userId"></id>
+        <result column="user_name" property="userName"></result>
+        <result column="user_password" property="password"></result>
+        <result column="blog_numbers" property="blogNumbers"></result>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseMap">
+        select * from user_message where user_id = #{id}
+    </select>
+
+    <select id="selectByName" resultMap="BaseMap">
+        select * from user_message where user_name = #{userName}
+    </select>
+
+    <select id="getImageUrl" resultType="java.lang.String">
+        select image_url from user_message where user_id = #{userId}
+    </select>
+
+    <insert id="add">
+        insert into user_message(user_name, user_password) values(#{userName}, #{password})
+    </insert>
+
+    <update id="saveImageUrl">
+        update user_message set image_url = #{url} where user_id = #{userId}
+    </update>
+
+    <update id="increaseBlogNumbers">
+        update user_message set blog_numbers = blog_numbers + 1 where user_id = #{id}
+    </update>
+    
+    <delete id="reduceBlogNumber">
+        update user_message set blog_numbers = blog_numbers - 1 where user_id = #{id}
+    </delete>
+</mapper>

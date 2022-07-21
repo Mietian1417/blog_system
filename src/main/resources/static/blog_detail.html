@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客正文详情</title>
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/blog_datail.css">
+    <!-- markdown依赖 -->
+    <link rel="stylesheet" href="editor.md/css/editormd.min.css">
+   
+</head>
+<body>
+    <div class="nav">
+        <img src="image/logo.jpg" alt="这是博客系统的logo">
+        <span class="name">博客详情</span>
+        <span class="space"> </span>
+        <a href="blog_list.html">主页</a>
+        <a href="blog_write.html">写博客</a>
+        <a href="/blog/logout">注销</a>
+    </div>
+
+    <div class="container">
+        <div class="left">
+            <div class="message">
+                <img id="picture" src="image/single af.png" title="点击即可自定义图片" alt="图片加载失败">
+                <h3></h3>
+                <a href=""  class="address">博客总览</a>
+                <div class="row">
+                    <span>文章</span>
+                    <span>访客</span>
+                </div>
+                <div class="row">
+                    <span class="blog_numbers"></span>
+                    <span class="visitors"></span>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <h3 class="title"></h3>
+            <div class="date"></div>
+            <p id="content" style="background-color: transparent;"></p>
+        </div>
+    </div>
+    
+    <!-- markdown依赖 -->
+    <script src="js/jquery.min.js"></script>
+    <script src="editor.md/lib/marked.min.js"></script>
+    <script src="editor.md/lib/prettify.min.js"></script>
+    <script src="editor.md/editormd.js"></script>
+        <script>
+            $.ajax({
+                url:"/blog/detail" + location.search,   // 获取到全路径,  location.search 是获取到 字符串查询词
+                method:"GET",
+                success:function(data, status){
+                    getData(data.data);
+                }
+            })
+
+            function getData(blog){
+                let title = document.querySelector('.title');
+                title.innerHTML = blog.title;
+             
+                let postTime = document.querySelector('.date');
+                postTime.innerHTML = formatDate(blog.postTime);
+            
+                // let contentP = document.querySelector('#content');
+                // contentP.innerHTML = blog.content;
+
+                //将得到的内容以 markdown 的方式渲染, 并且放到id为content的标签中
+                editormd.markdownToHTML('content',{markdown: blog.content});
+              
+            }
+
+            function formatDate(timeStamp) { 
+                let time = new Date(timeStamp);
+                let y = time.getFullYear(); //getFullYear方法以四位数字返回年份
+                let M = time.getMonth() + 1; // getMonth方法从 Date 对象返回月份 (0 ~ 11)，返回结果需要手动加一
+                let d = time.getDate(); // getDate方法从 Date 对象返回一个月中的某一天 (1 ~ 31)
+                let h = time.getHours(); // getHours方法返回 Date 对象的小时 (0 ~ 23)
+                let m = time.getMinutes(); // getMinutes方法返回 Date 对象的分钟 (0 ~ 59)
+                let s = time.getSeconds(); // getSeconds方法返回 Date 对象的秒数 (0 ~ 59)
+                return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m) + ':' + addZero(s);
+            }
+
+            function addZero(m) {
+                return m < 10 ? '0' + m : m;
+            }
+
+
+            $.ajax({
+                url:"/blog/author" + location.search,
+                method:"GET",
+                success:function(data,status){
+                    getUserName(data.data);
+                }
+            })
+
+            function getUserName(user){
+                let userName = document.querySelector('.message h3');
+                userName.innerHTML = user.authorName;
+                let blog_numbers = document.querySelector('.row .blog_numbers');
+                blog_numbers.innerHTML = user.blogNumbers;
+                let visitors = document.querySelector('.row .visitors');
+                visitors.innerHTML = user.visitors;
+
+                let APersonalBlogs = document.querySelector(".address");
+                APersonalBlogs.href = "blog_personal.html" + location.search;
+
+                if(user.url !== "unkown"){
+                    let img = document.querySelector("#picture");
+                    img.src = user.url;
+                }
+
+                getDeleteButton(user.isAuthor);
+            }
+
+
+            function getDeleteButton(isAuthor){
+                if(isAuthor){
+                    let navDiv = document.querySelector('.nav');
+                    let deleteA = document.createElement('a');
+                    deleteA.href = "#";
+                    deleteA.innerHTML = "删除该博客";
+                    navDiv.appendChild(deleteA);
+                    deleteA.onclick = deleteBlog;
+                }
+            }
+
+            function deleteBlog(){
+                $.ajax({
+                    url:"/blog/delete" + location.search,
+                    method:"DELETE",
+                    success:function(data,status){
+                        if(data.data === -1){
+                            alert("删除博客失败! ");
+                        }
+                        location.assign('blog_list.html')                
+                    }
+                })
+            }
+        </script>
+</body>
+</html>

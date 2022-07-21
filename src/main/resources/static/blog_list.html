@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客系统</title>
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/blog_list.css">
+</head>
+<body>
+<div class="nav">
+    <img src="image/logo.jpg" alt="这是博客系统的logo">
+    <span class="name">博客广场</span>
+    <span class="space"> </span>
+    <a href="blog_list.html">主页</a>
+    <a href="blog_write.html">写博客</a>
+    <a href="/blog/logout">注销</a>
+</div>
+
+<div class="container">
+    <div class="left">
+        <div class="message">
+            <form enctype="multipart/form-data" id="postFile">
+                <img id="picture" src="image/single af.png" title="点击即可自定义图片" alt="图片加载失败">
+                <input type="file" name="image" class="file-upload" style="display:none" accept="image/*">
+            </form>
+            <h3></h3>
+            <a href="" class="address">博客总览</a>
+            <div class="row">
+                <span>文章</span>
+                <span>访客</span>
+            </div>
+            <div class="row">
+                <span class="blog_numbers"></span>
+                <span class="visitors"></span>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <!-- 每篇博客样式 -->
+        <!-- <div class="blog">
+            <h3>我的第一篇博客</h3>
+            <div class = "date">2021-03-21</div>
+            <div class="blog_message">从今天起,我要好好学习!!! Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis iure consequuntur consequatur non cum obcaecati consectetur dolor iusto corporis ullam id omnis animi odit, nisi debitis. Delectus accusantium labore voluptatibus.</div>
+            <a href="blog_detail.html">查看全文 &gt;&gt;</a>
+        </div>
+
+        <div class="blog">
+            <h3>我的第二篇博客</h3>
+            <div class = "date">2021-03-23</div>
+            <div class="blog_message">从昨天起,我要好好学习!!! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo obcaecati unde possimus magni optio ducimus excepturi nesciunt aliquam ullam id amet provident soluta nostrum dolorum culpa quisquam debitis, iure distinctio.</div>
+            <a href="blog_detail.html">查看全文 &gt;&gt;</a>
+        </div> -->
+
+
+    </div>
+</div>
+
+<!-- 用 ajax 从服务器获取数据 -->
+<script src="js/jquery.min.js"></script>
+<script>
+
+
+    $(document).on("click", "#picture", function () {
+        // 点击图片的同时，点击上传文件的input
+        $('.file-upload').click();
+        // 将上传的图片显示到页面上
+        $(document).on("change", ".file-upload", function () {
+            // 获取图片
+            let fileObj = $(".file-upload")[0];
+            let img = document.getElementById('picture'); //获得用户上传的图片节点
+            let reader = new FileReader();
+            // 转换成功后的操作，img.src即为转换后的DataURL
+            reader.onload = function (e) {
+                if (reader.readyState === 2) { //加载完毕后赋值
+                    img.src = e.target.result;
+                }
+            }
+            reader.readAsDataURL(fileObj.files[0]);
+            postImage();
+        });
+    });
+
+    $.ajax({
+        url: "/blog/list",
+        method: "GET",
+        success: function (data, status) {
+            getData(data.data);
+        }
+    })
+
+    function getData(blogs) {
+        for (let blog of blogs) {
+            let blogDiv = document.createElement('div');
+            blogDiv.className = 'blog';
+
+            let title = document.createElement('h3');
+            title.innerHTML = blog.title;
+            blogDiv.appendChild(title);
+
+            let dateDiv = document.createElement('div');
+            dateDiv.className = 'date';
+            dateDiv.innerHTML = formatDate(blog.postTime);
+            blogDiv.appendChild(dateDiv);
+
+            let contentDiv = document.createElement('div');
+            contentDiv.className = 'blog_message';
+            if (blog.content.length > 200) {
+                contentDiv.innerHTML = blog.content.substring(0, 200) + "...";
+            } else {
+                contentDiv.innerHTML = blog.content;
+            }
+            blogDiv.appendChild(contentDiv);
+
+            let detailA = document.createElement('a');
+            detailA.innerHTML = '查看全文 &gt; &gt';
+            detailA.href = 'blog_detail.html?blogId=' + blog.blogId;
+            blogDiv.appendChild(detailA);
+
+            let parentDiv = document.querySelector('.right');
+            parentDiv.appendChild(blogDiv);
+        }
+    }
+
+    function formatDate(timeStamp) {
+        let time = new Date(timeStamp);
+        let y = time.getFullYear(); //getFullYear方法以四位数字返回年份
+        let M = time.getMonth() + 1; // getMonth方法从 Date 对象返回月份 (0 ~ 11)，返回结果需要手动加一
+        let d = time.getDate(); // getDate方法从 Date 对象返回一个月中的某一天 (1 ~ 31)
+        let h = time.getHours(); // getHours方法返回 Date 对象的小时 (0 ~ 23)
+        let m = time.getMinutes(); // getMinutes方法返回 Date 对象的分钟 (0 ~ 59)
+        let s = time.getSeconds(); // getSeconds方法返回 Date 对象的秒数 (0 ~ 59)
+        return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m) + ':' + addZero(s);
+    }
+
+    function addZero(m) {
+        return m < 10 ? '0' + m : m;
+    }
+
+
+    $.ajax({
+        url: "/blog/lander",
+        method: "GET",
+        success: function (data, status) {
+            getUser(data.data);
+        }
+    })
+
+    function getUser(user) {
+        let userName = document.querySelector('.message h3');
+        userName.innerHTML = user.userName;
+        let blog_numbers = document.querySelector('.row .blog_numbers');
+        blog_numbers.innerHTML = user.blogNumbers;
+        let visitors = document.querySelector('.row .visitors');
+        visitors.innerHTML = user.visitors;
+
+        let APersonalBlogs = document.querySelector(".address");
+        APersonalBlogs.href = "blog_personal.html?blogId=-1";
+
+        if (user.url !== "unkown") {
+            let img = document.querySelector("#picture");
+            img.src = user.url;
+        }
+    }
+
+    function postImage() {
+        // 点击图片的同时，点击上传文件的input
+        $('.file-upload').click();
+        let form = document.querySelector("#postFile");
+        let formData = new FormData(form);
+        // 将上传的图片显示到页面上
+        $.ajax({
+            url: "/blog/image",
+            type: "post",
+            data: formData,
+            dataType: "json",
+            async: false,
+            contentType: false,
+            processData: false,
+            success: function (data, status) {
+                console.log(data.url);
+                if (data.status === -1) {
+                    return;
+                }
+                if (data.url === "unkown") {
+                    return;
+                }
+
+                let img = document.querySelector("#picture");
+                img.src = data.url;
+
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

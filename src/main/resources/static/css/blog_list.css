@@ -1,0 +1,37 @@
+/* 这个是展示博客主页的样式 */
+
+.blog{
+   margin: 25px 5px;
+}
+.blog h3{
+    text-align: center;
+}
+.blog .date{
+    text-align: center;
+    padding: 5px;
+    color: gray;
+}
+.blog .blog_message{
+    text-indent: 2em;
+    font-size: 18px;
+}
+
+.blog a{
+    display: block;
+    width: 110px;
+    height: 30px;
+    color: black;
+    border:2px black solid;
+    line-height: 30px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px auto;
+}
+
+.blog a:hover{
+    color: white;
+    background-color: black;
+}
+.blog a:active{
+    color: red;
+}

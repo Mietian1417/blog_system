@@ -1,0 +1,41 @@
+/* 这个是编写博客的样式 */
+.editor_container{
+    width: 80%;
+    height: calc(100% - 50px);
+    margin: 0 auto;
+
+}
+
+.title{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title input{
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+}
+.title #submit{
+    width: 15%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+.title #submit:active{
+    color: red;
+    background-color: gray;
+}
+
+.editor_container #editor{
+    border-radius: 10px;
+    opacity: 0.8;
+}
+

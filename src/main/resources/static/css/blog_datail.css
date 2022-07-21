@@ -1,0 +1,26 @@
+/* 这是博客详情(查看正文的样式) */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.right h3{
+    text-align: center;
+    margin: center center;
+    font-size: 20px;
+    padding: 20px 0 0 0;
+}
+
+.right .date{
+    text-align: center;
+    color: gray;
+    padding: 10px 0;
+}
+
+.right p{
+    text-indent: 2em;
+    margin: 10px 0;
+    font-size: 18px;
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 里面是 mapper 接口的类名完整路径-->
+<mapper namespace="com.example.demo.mapper.BlogMapper">
+
+<resultMap id="BaseMap" type="com.example.demo.model.Blog">
+    <id column="blog_id" property="blogId"></id>
+    <result column="title" property="title"></result>
+    <result column="content" property="content"></result>
+    <result column="post_time" property="postTime"></result>
+    <result column="user_id" property="userId"></result>
+    <result column="visitors" property="visitors"></result>
+    <result column="status" property="status"></result>
+</resultMap>
+
+    <select id="selectAll" resultMap="BaseMap">
+        select * from blog_message where status = 1 order by post_time desc
+    </select>
+
+    <select id="selectById" resultMap="BaseMap">
+        select * from blog_message where blog_id = #{id}
+    </select>
+
+    <insert id="add">
+        insert into blog_message(title, content, post_time, user_id) values(#{title}, #{content}, #{postTime}, #{userId})
+    </insert>
+
+<!--    逻辑删除-->
+    <delete id="deleteById">
+        update blog_message set status = 0 where blog_id = #{id}
+    </delete>
+
+    <update id="updateVisitors">
+        update blog_message set visitors = visitors + 1 where blog_id = #{id}
+    </update>
+
+    <select id="getVisitors"  resultType="java.lang.Integer">
+        select sum(visitors) from blog_message where user_id = #{userId}
+    </select>
+
+    <select id="getPersonalBlogs"  resultMap="BaseMap">
+        select * from blog_message where user_id = #{userId} and status = 1 order by post_time desc;
+    </select>
+
+</mapper>

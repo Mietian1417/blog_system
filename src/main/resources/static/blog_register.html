@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客系统登录</title>
+    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="css/blog_login.css">
+</head>
+<body>
+    <div class="nav">
+        <img src="image/logo.jpg" alt="这是博客系统的logo">
+        <span class="name">博客注册</span>
+        <span class="space"> </span>
+        <a href="blog_list.html">主页</a>
+        <a href="blog_write.html">写博客</a>
+        <a href="/blog/logout" style="display: none;">注销</a>
+    </div>
+
+    <div class="login_container">
+        <div class="login">
+            <div class="space"></div>
+            <h3>注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册</h3>
+            <div class="row">
+                <span>用户名</span>
+                <input class="user_name" type="text" name="userName">
+            </div>
+           <div class="row">
+                <span>密码</span>
+                <input class="password" type="password" name="password">
+           </div>
+           <div id="button">
+                <input onclick="register()" type="submit" id="submit" value="注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;册">
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+        function register() {
+            let userName = $(".user_name").val();
+            let password = $(".password").val();
+            $.getJSON("/blog/register",
+                // 下面这个json格式传输到后端, 是查询字符串的格式获取
+                {
+                    "username": userName,
+                    "password": password
+                },
+                function (result) {
+                    if (result.status === -1) {
+                        alert("用户名或密码为空! ");
+                        return;
+                    }
+                    if (result.status === -2){
+                        alert("用户名存在! ");
+                        return;
+                    }
+                    if (result.status === 1){
+                        location.assign("blog_login.html");
+                    }
+                }
+            )
+        }
+    </script>
+</body>
+</html>
